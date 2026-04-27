@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Calcolatore Poolish</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      color: #000;
+      margin: 0;
+      text-align: center;
+    }
+
+    .box {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .method {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .label {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      font-size: 24px;
+      padding: 10px;
+      border: 2px solid #000;
+      margin-bottom: 30px;
+    }
+
+    .result {
+      text-align: left;
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: 24px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .muted {
+      color: #555;
+    }
+
+    .highlight {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .notes {
+      margin-top: 25px;
+      font-size: 16px;
+      color: #555;
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>🥖 Calcolatore Poolish</h2>
+
+  <div class="method">Metodo: farina impasto</div>
+
+  <div class="label">Inserisci farina impasto (grammi)</div>
+
+  <input type="number" id="farina" placeholder="es. 2000" oninput="calcola()">
+
+  <div class="result" id="output"></div>
+</div>
+
+<script>
+function calcola() {
+  let Fi = parseFloat(document.getElementById("farina").value);
+
+  if (!Fi) {
+    document.getElementById("output").innerHTML = "";
+    return;
+  }
+
+  // 🔹 POOLISH
+  let farinaPoolish = Fi * 0.50;
+  let acquaPoolish = farinaPoolish;
+
+  let lievitoFrescoMin = farinaPoolish * 0.002;
+  let lievitoFrescoMax = farinaPoolish * 0.003;
+  let lievitoSeccoMin = farinaPoolish * 0.001;
+  let lievitoSeccoMax = farinaPoolish * 0.0015;
+
+  // 🔹 FARINA TOTALE
+  let farinaTotale = Fi + farinaPoolish;
+
+  // 🔹 IMPASTO
+  let acquaImpasto = Fi * 0.40;
+  let lievitoImpasto = Fi * 0.01;
+  let sale = farinaTotale * 0.02;
+
+  // 🔹 IDRATAZIONE
+  let acquaTotale = acquaPoolish + acquaImpasto;
+  let idratazione = (acquaTotale / farinaTotale) * 100;
+
+  document.getElementById("output").innerHTML = `
+    <div class="section">
+      <h3>🧪 Poolish</h3>
+
+      Farina Manitoba (W300): ${farinaPoolish.toFixed(0)} g<br>
+      Acqua fredda: ${acquaPoolish.toFixed(0)} g<br>
+
+      Lievito fresco: ${lievitoFrescoMin.toFixed(1)} - ${lievitoFrescoMax.toFixed(1)} g
+      <span class="muted">(secco: ${lievitoSeccoMin.toFixed(1)} - ${lievitoSeccoMax.toFixed(1)} g)</span><br>
+
+      Riposo: 18 ore a 18°C
+    </div>
+
+    <div class="section">
+      <h3>🍞 Impasto</h3>
+
+      Farina debole: ${Fi.toFixed(0)} g<br>
+      Acqua fredda (40%): ${acquaImpasto.toFixed(0)} g<br>
+      Lievito fresco (1%): ${lievitoImpasto.toFixed(0)} g<br>
+      Sale (2% farina totale): ${sale.toFixed(0)} g<br>
+
+      <div class="highlight">
+        Idratazione totale: ${idratazione.toFixed(0)} %
+      </div>
+    </div>
+
+    <div class="notes">
+      Poolish: Manitoba W300 • acqua 100% • lievito fresco 2–3 g/kg (secco 1–1,5 g/kg) • riposo 18h a 18°C<br>
+      Impasto: farina debole • acqua 40% della farina impasto • lievito 1% • sale 2% sulla farina totale
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
