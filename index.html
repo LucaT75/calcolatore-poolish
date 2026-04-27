@@ -2,156 +2,116 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Calcolatore Poolish</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcolatore Poolish</title>
 
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #ffffff;
-      color: #000;
+      background: #f5f5f5;
       margin: 0;
-      text-align: center;
+      padding: 0;
     }
 
-    .box {
+    .container {
       max-width: 520px;
-      margin: 0 auto;
+      margin: auto;
       padding: 20px;
+      background: white;
+      min-height: 100vh;
     }
 
-    h2 {
-      font-size: 22px;
-      margin-bottom: 10px;
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    .method {
-      font-size: 20px;
+    label {
       font-weight: bold;
-      margin-bottom: 20px;
+      display: block;
+      margin-top: 15px;
     }
 
-    .label {
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-
-    input {
+    input, select, button {
       width: 100%;
-      font-size: 24px;
-      padding: 10px;
-      border: 2px solid #000;
-      margin-bottom: 30px;
+      font-size: 18px;
+      padding: 12px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: black;
+      color: white;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
     }
 
     .result {
-      text-align: left;
-      font-size: 20px;
-      line-height: 1.5;
-    }
-
-    h3 {
-      font-size: 24px;
       margin-top: 20px;
-      margin-bottom: 10px;
-    }
-
-    .section {
-      margin-bottom: 25px;
-    }
-
-    .muted {
-      color: #555;
+      padding: 15px;
+      background: #f0f0f0;
+      font-size: 18px;
+      line-height: 1.6;
     }
 
     .highlight {
       font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .notes {
-      margin-top: 25px;
-      font-size: 16px;
-      color: #555;
-      text-align: left;
+      color: #c0392b;
     }
   </style>
 </head>
 
 <body>
 
-<div class="box">
-  <h2>🥖 Calcolatore Poolish</h2>
+<div class="container">
+  <h1>Calcolatore Poolish</h1>
 
-  <div class="method">Metodo: farina impasto</div>
+  <label>Farina impasto (g)</label>
+  <input type="number" id="farina" value="2000">
 
-  <div class="label">Inserisci farina impasto (grammi)</div>
+  <label>Percentuale Poolish (%)</label>
+  <input type="number" id="poolishPerc" value="50">
 
-  <input type="number" id="farina" placeholder="es. 2000" oninput="calcola()">
+  <label>Idratazione totale (%)</label>
+  <input type="number" id="idratazione" value="60">
 
-  <div class="result" id="output"></div>
+  <button onclick="calcola()">Calcola</button>
+
+  <div class="result" id="risultato"></div>
 </div>
 
 <script>
 function calcola() {
-  let Fi = parseFloat(document.getElementById("farina").value);
 
-  if (!Fi) {
-    document.getElementById("output").innerHTML = "";
-    return;
-  }
+  let farina = parseFloat(document.getElementById("farina").value);
+  let poolishPerc = parseFloat(document.getElementById("poolishPerc").value);
+  let idratazione = parseFloat(document.getElementById("idratazione").value);
 
-  // 🔹 POOLISH
-  let farinaPoolish = Fi * 0.50;
-  let acquaPoolish = farinaPoolish;
+  let farinaPoolish = farina * (poolishPerc / 100);
+  let acquaPoolish = farinaPoolish; // 100%
 
-  let lievitoFrescoMin = farinaPoolish * 0.002;
-  let lievitoFrescoMax = farinaPoolish * 0.003;
-  let lievitoSeccoMin = farinaPoolish * 0.001;
-  let lievitoSeccoMax = farinaPoolish * 0.0015;
+  let farinaImpasto = farina - farinaPoolish;
 
-  // 🔹 FARINA TOTALE
-  let farinaTotale = Fi + farinaPoolish;
+  let acquaTotale = farina * (idratazione / 100);
+  let acquaImpasto = acquaTotale - acquaPoolish;
 
-  // 🔹 IMPASTO
-  let acquaImpasto = Fi * 0.40;
-  let lievitoImpasto = Fi * 0.01;
-  let sale = farinaTotale * 0.02;
+  let lievito = farina * 0.01;
+  let sale = farina * 0.02;
 
-  // 🔹 IDRATAZIONE
-  let acquaTotale = acquaPoolish + acquaImpasto;
-  let idratazione = (acquaTotale / farinaTotale) * 100;
+  document.getElementById("risultato").innerHTML = `
+    <div><b>POOLISH</b></div>
+    Farina: <span class="highlight">${farinaPoolish.toFixed(0)} g</span><br>
+    Acqua: <span class="highlight">${acquaPoolish.toFixed(0)} g</span><br><br>
 
-  document.getElementById("output").innerHTML = `
-    <div class="section">
-      <h3>🧪 Poolish</h3>
+    <div><b>IMPASTO</b></div>
+    Farina: ${farinaImpasto.toFixed(0)} g<br>
+    Acqua: ${acquaImpasto.toFixed(0)} g<br>
+    Lievito: ${lievito.toFixed(0)} g<br>
+    Sale: ${sale.toFixed(0)} g<br><br>
 
-      Farina Manitoba (W300): ${farinaPoolish.toFixed(0)} g<br>
-      Acqua fredda: ${acquaPoolish.toFixed(0)} g<br>
-
-      Lievito fresco: ${lievitoFrescoMin.toFixed(1)} - ${lievitoFrescoMax.toFixed(1)} g
-      <span class="muted">(secco: ${lievitoSeccoMin.toFixed(1)} - ${lievitoSeccoMax.toFixed(1)} g)</span><br>
-
-      Riposo: 18 ore a 18°C
-    </div>
-
-    <div class="section">
-      <h3>🍞 Impasto</h3>
-
-      Farina debole: ${Fi.toFixed(0)} g<br>
-      Acqua fredda (40%): ${acquaImpasto.toFixed(0)} g<br>
-      Lievito fresco (1%): ${lievitoImpasto.toFixed(0)} g<br>
-      Sale (2% farina totale): ${sale.toFixed(0)} g<br>
-
-      <div class="highlight">
-        Idratazione totale: ${idratazione.toFixed(0)} %
-      </div>
-    </div>
-
-    <div class="notes">
-      Poolish: Manitoba W300 • acqua 100% • lievito fresco 2–3 g/kg (secco 1–1,5 g/kg) • riposo 18h a 18°C<br>
-      Impasto: farina debole • acqua 40% della farina impasto • lievito 1% • sale 2% sulla farina totale
-    </div>
+    <div><b>IDRATAZIONE</b>: ${idratazione}%</div>
   `;
 }
 </script>
